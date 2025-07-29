@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   city: String,
   state: String,
   zip: String
-}, { timestamps: true }); // adds createdAt and updatedAt
+}, {
+  timestamps: true // adds createdAt and updatedAt
+});
 
 module.exports = mongoose.model('User', userSchema);

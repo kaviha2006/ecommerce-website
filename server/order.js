@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-// ✅ Use the same secret key as in auth.js
-const JWT_SECRET = 'your_jwt_secret'; // Replace with your actual secret
+const JWT_SECRET = 'your_jwt_secret'; // Use env variable in production
 
 // 🧾 Order schema and model
 const orderSchema = new mongoose.Schema({
@@ -17,9 +16,9 @@ const orderSchema = new mongoose.Schema({
   }
 });
 
-const Order = mongoose.model('orders', orderSchema); // Collection name will be 'orders'
+const Order = mongoose.model('orders', orderSchema);
 
-// 🔐 JWT Authentication Middleware
+// 🔐 JWT Middleware
 function authenticateToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.sendStatus(401);
@@ -31,7 +30,7 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// ✅ Save a new order → POST /api/orders/place
+// ✅ Place an order → POST /api/orders/place
 router.post('/place', authenticateToken, async (req, res) => {
   const { items, total } = req.body;
 
@@ -43,34 +42,32 @@ router.post('/place', authenticateToken, async (req, res) => {
     });
 
     await order.save();
-    res.json({ success: true, message: 'Order saved successfully' }); // ✅ IMPORTANT
+    res.json({ success: true, message: 'Order saved successfully' });
   } catch (err) {
     console.error('❌ Error saving order:', err);
     res.status(500).json({ success: false, message: 'Failed to save order' });
   }
 });
 
-
-// ✅ Get user's orders → GET /api/orders/my
+// ✅ Fetch user orders → GET /api/orders/my
 router.get('/my', authenticateToken, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user.id }).sort({ date: -1 });
-    res.json({ success: true, orders }); // ✅ Return with success flag and array
+    res.json({ success: true, orders });
   } catch (err) {
     console.error('❌ Error fetching orders:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch orders' });
   }
 });
 
-module.exports = router;
-// ✅ DELETE /api/orders/:id → Delete a specific order
+// ✅ Delete a specific order → DELETE /api/orders/:id
 router.delete('/:id', authenticateToken, async (req, res) => {
   const orderId = req.params.id;
 
   try {
     const deleted = await Order.findOneAndDelete({
       _id: orderId,
-      userId: req.user.id  // ✅ Security: only delete if it belongs to the user
+      userId: req.user.id
     });
 
     if (!deleted) {
@@ -84,3 +81,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+module.exports = router;

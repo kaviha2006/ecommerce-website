@@ -1,72 +1,71 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('./User'); // Adjust if needed
+const bcrypt = require('bcryptjs');
 const router = express.Router();
+const User = require('./user');
 
-const JWT_SECRET = 'your_jwt_secret'; // ✅ Use same as in order.js
+const JWT_SECRET = 'your_jwt_secret'; // Use env variable in production
 
-// ✅ Middleware to verify token
-const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: 'No token provided' });
-
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.userId = decoded.id;
-    next();
-  } catch (err) {
-    res.status(401).json({ success: false, message: 'Invalid token' });
-  }
-};
-
-// ✅ Register
+// 🔐 Register new user → POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { email, password, ...rest } = req.body;
+  const { name, email, password, phone, address1, address2, city, state, zip } = req.body;
 
   try {
-    const existing = await User.findOne({ email });
-    if (existing) return res.json({ success: false, message: 'User already exists' });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(409).json({ success: false, message: 'User already exists' });
 
-    const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashed, ...rest });
-    await user.save();
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET);
-    res.json({ success: true, token });
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      address1,
+      address2,
+      city,
+      state,
+      zip
+    });
+
+    await newUser.save();
+    res.status(201).json({ success: true, message: 'User registered successfully' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Registration error', error: err.message });
+    console.error('❌ Error registering user:', err);
+    res.status(500).json({ success: false, message: 'Registration failed' });
   }
 });
 
-// ✅ Login
+// 🔑 Login user → POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.json({ success: false, message: 'User not found' });
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.json({ success: false, message: 'Invalid password' });
-
-    const token = jwt.sign({ id: user._id }, JWT_SECRET);
-    res.json({ success: true, token });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'Login error', error: err.message });
-  }
-});
-
-// ✅ Profile
-router.get('/profile', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
-    res.json({ success: true, user });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address1: user.address1,
+        address2: user.address2,
+        city: user.city,
+        state: user.state,
+        zip: user.zip
+      }
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Profile fetch error', error: err.message });
+    console.error('❌ Error logging in:', err);
+    res.status(500).json({ success: false, message: 'Login failed' });
   }
 });
 
