@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
-const User = require('./user');
+const User = require('./User');
 
 const JWT_SECRET = 'your_jwt_secret'; // Use env variable in production
 
