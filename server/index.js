@@ -1,34 +1,30 @@
-// Load .env variables
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+
+import authRoutes from './auth.js';
+import orderRoutes from './order.js';
+
 dotenv.config();
-
-// Import dependencies
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
-// Import routes
-const authRoutes = require('./auth');
-const orderRoutes = require('./order');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.log("❌ MongoDB error:", err));
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Product schema and model
-const productSchema = new mongoose.Schema({
+import mongoosePkg from 'mongoose';
+const { Schema, model } = mongoosePkg;
+
+const productSchema = new Schema({
   name: String,
   price: Number,
   description: String,
@@ -37,9 +33,8 @@ const productSchema = new mongoose.Schema({
   category: String
 });
 
-const Product = mongoose.model('ecommerce', productSchema);
+const Product = model('ecommerce', productSchema);
 
-// Get all products or by category
 app.get('/products', async (req, res) => {
   const { category } = req.query;
   try {
@@ -52,7 +47,6 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// Get products by category
 app.get('/products/category/:category', async (req, res) => {
   const { category } = req.params;
   try {
@@ -63,7 +57,6 @@ app.get('/products/category/:category', async (req, res) => {
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Backend running at http://localhost:${PORT}`);
 });
