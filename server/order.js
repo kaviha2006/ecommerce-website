@@ -1,14 +1,21 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
-const JWT_SECRET = 'your_jwt_secret'; // Use env variable in production
-
-// 🧾 Order schema and model
+// 🧾 Order Schema
 const orderSchema = new mongoose.Schema({
   userId: String,
-  items: Array,
+  items: [
+    {
+      productId: String,
+      name: String,
+      quantity: Number,
+      price: Number
+    }
+  ],
   total: Number,
   date: {
     type: Date,
@@ -16,7 +23,8 @@ const orderSchema = new mongoose.Schema({
   }
 });
 
-const Order = mongoose.model('orders', orderSchema);
+// ⚙️ Model with explicit collection name
+const Order = mongoose.model('Order', orderSchema, 'orders');
 
 // 🔐 JWT Middleware
 function authenticateToken(req, res, next) {
@@ -30,9 +38,13 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// ✅ Place an order → POST /api/orders/place
+// ✅ Place an order
 router.post('/place', authenticateToken, async (req, res) => {
   const { items, total } = req.body;
+
+  if (!items || !total || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Invalid order data' });
+  }
 
   try {
     const order = new Order({
@@ -42,14 +54,14 @@ router.post('/place', authenticateToken, async (req, res) => {
     });
 
     await order.save();
-    res.json({ success: true, message: 'Order saved successfully' });
+    res.json({ success: true, message: 'Order placed successfully' });
   } catch (err) {
     console.error('❌ Error saving order:', err);
     res.status(500).json({ success: false, message: 'Failed to save order' });
   }
 });
 
-// ✅ Fetch user orders → GET /api/orders/my
+// ✅ Get user's orders
 router.get('/my', authenticateToken, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user.id }).sort({ date: -1 });
@@ -60,13 +72,11 @@ router.get('/my', authenticateToken, async (req, res) => {
   }
 });
 
-// ✅ Delete a specific order → DELETE /api/orders/:id
+// ✅ Delete specific order
 router.delete('/:id', authenticateToken, async (req, res) => {
-  const orderId = req.params.id;
-
   try {
     const deleted = await Order.findOneAndDelete({
-      _id: orderId,
+      _id: req.params.id,
       userId: req.user.id
     });
 
@@ -81,4 +91,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -8,12 +8,14 @@ export default function ProductGrid({ sortBy, search = '', showAddToCart = false
   const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
 
   useEffect(() => {
-    fetch('http://localhost:5000/products')
-      .then(res => res.json())
-      .then(data => {
-        setProducts(data);
-      });
-  }, []);
+  fetch('http://localhost:5000/api/products') // ✅ correct endpoint
+    .then(res => res.json())
+    .then(data => {
+      setProducts(data);
+    })
+    .catch(err => console.error('Fetch error:', err)); // ❗ also move .catch inside useEffect block
+}, []);
+
 
   const filteredProducts = products.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase())
