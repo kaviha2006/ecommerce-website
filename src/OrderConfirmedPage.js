@@ -14,7 +14,7 @@ export default function OrderConfirmedPage() {
     orderPlacedRef.current = true;
     console.log("📦 Placing order...");
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/orders/place`, {
+   fetch('https://ecommerce-backend-6p3c.onrender.com/api/orders/place', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

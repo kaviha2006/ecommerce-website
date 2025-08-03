@@ -13,7 +13,7 @@ export default function OrdersPage() {
       return;
     }
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/orders/my`, {
+   fetch('https://ecommerce-backend-6p3c.onrender.com/api/orders/my', {
       headers: {
         Authorization: 'Bearer ' + token
       }

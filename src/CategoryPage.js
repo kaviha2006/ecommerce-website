@@ -14,7 +14,7 @@ export default function CategoryPage() {
   const { addToCart, totalItems } = useContext(CartContext); // ✅ Use totalItems for badge
 
   useEffect(() => {
- fetch(`${process.env.REACT_APP_API_BASE_URL}/api/products?category=${categoryName}`)
+ fetch(`https://ecommerce-backend-6p3c.onrender.com/api/products?category=${categoryName}`)
     .then((res) => res.json())
     .then((data) => {
       let sorted = [...data];

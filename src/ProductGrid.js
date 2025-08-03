@@ -8,7 +8,7 @@ export default function ProductGrid({ sortBy, search = '', showAddToCart = false
   const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
 
   useEffect(() => {
-  fetch(`${process.env.REACT_APP_API_URL}/products`)
+  fetch('https://ecommerce-backend-6p3c.onrender.com/api/products')
     .then(res => res.json())
     .then(data => {
       setProducts(data);
