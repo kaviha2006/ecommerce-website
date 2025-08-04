@@ -1,6 +1,5 @@
-// 📄 server/seed.js
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose'; // Change to import
 
 dotenv.config();
 
@@ -16,22 +15,15 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model('Product', productSchema, 'ecommerce');
 
 const seedData = [
-  [{
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7de"
+  {
+    "name": "wireless headphone",
+    "price": 113,
+    "description": "High-quality wireless headphones for immersive sound and hands-free convenience.",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvWxJ6o8m47uHduGfxg8Rj2NXmcvjTOMTrkA&s",
+    "rating": 4.5,
+    "category": "electronics"
   },
-  "name": "wireless headphone",
-  "price": 113,
-  "description": "High-quality wireless headphones for immersive sound and hands-free convenience.",
-  "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvWxJ6o8m47uHduGfxg8Rj2NXmcvjTOMTrkA&s",
-  "rating": 4.5,
-  "category": "electronics",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7df"
-  },
+  {
   "name": "flower clips",
   "price": 103,
   "description": "Cute and colorful flower hair clips to add charm to any hairstyle.",
@@ -41,9 +33,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e0"
-  },
   "name": "ballpoint pen(10)",
   "price": 108,
   "description": "Smooth-writing ballpoint pen ideal for everyday use at home or office.",
@@ -53,9 +42,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e1"
-  },
   "name": "Flipflops (Pack of 3)",
   "price": 193,
   "description": "Comfortable flipflops for everyday use.",
@@ -65,9 +51,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e2"
-  },
   "name": "printed bedsheet",
   "price": 250,
   "description": "Soft and stylish printed bedcover to brighten up your bedroom décor.",
@@ -77,9 +60,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e3"
-  },
   "name": "jhumka",
   "price": 199,
   "description": "Traditional jhumka earrings with intricate design for a classic ethnic look.",
@@ -89,9 +69,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e4"
-  },
   "name": "Analog Watch Combo",
   "price": 349,
   "description": "Combo of elegant analog watches.",
@@ -101,9 +78,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e5"
-  },
   "name": "Women’s Bracelet Set",
   "price": 179,
   "description": "Trendy bracelets for modern women.",
@@ -113,9 +87,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e6"
-  },
   "name": "Bluetooth Speaker",
   "price": 499,
   "description": "Portable Bluetooth speaker with deep bass and long battery life.",
@@ -125,9 +96,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e7"
-  },
   "name": "Kurtis Combo Pack",
   "price": 599,
   "description": "Combo pack of 2 stylish cotton kurtis perfect for daily wear.",
@@ -137,9 +105,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e8"
-  },
   "name": "Men’s Casual Shirt",
   "price": 399,
   "description": "Smart casual checked shirt for men. Ideal for office or outing.",
@@ -149,9 +114,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7e9"
-  },
   "name": "Study Table Lamp",
   "price": 299,
   "description": "Adjustable LED study lamp with soft lighting and USB charging.",
@@ -161,9 +123,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7ea"
-  },
   "name": "Color Gel Pens (Pack of 20)",
   "price": 149,
   "description": "Smooth gel pens in assorted colors for art and notes.",
@@ -173,9 +132,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7eb"
-  },
   "name": "Men’s Sports Shoes",
   "price": 799,
   "description": "Durable and lightweight running shoes for men.",
@@ -185,9 +141,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7ec"
-  },
   "name": "Scented Candles Set",
   "price": 199,
   "description": "Set of 4 scented candles to create a soothing ambiance.",
@@ -197,9 +150,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7ed"
-  },
   "name": "Hair Accessories Kit",
   "price": 129,
   "description": "Complete set of colorful clips, bands, and pins for girls.",
@@ -209,9 +159,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7ee"
-  },
   "name": "Smart Fitness Band",
   "price": 599,
   "description": "Track your steps, heart rate, and sleep with this sleek fitness band.",
@@ -221,9 +168,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7ef"
-  },
   "name": "Women’s Sling Bag",
   "price": 289,
   "description": "Trendy and compact sling bag perfect for casual outings.",
@@ -233,9 +177,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f0"
-  },
   "name": "Casual Men’s T-Shirt",
   "price": 299,
   "description": "Comfortable cotton t-shirt for everyday wear.",
@@ -245,9 +186,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f1"
-  },
   "name": "Decorative Wall Clock",
   "price": 399,
   "description": "Stylish wall clock for living room or office decor.",
@@ -257,9 +195,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f2"
-  },
   "name": "Women’s Heeled Sandals",
   "price": 499,
   "description": "Elegant heeled sandals for festive or formal occasions.",
@@ -269,9 +204,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f3"
-  },
   "name": "Notebook Combo Set",
   "price": 120,
   "description": "Set of 6 colorful notebooks for school or journaling.",
@@ -281,9 +213,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f4"
-  },
   "name": "Men's Leather Wallet",
   "price": 299,
   "description": "Premium leather wallet with multiple compartments for men.",
@@ -293,9 +222,6 @@ const seedData = [
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6864a566558c56e1eb5de7f5"
-  },
   "name": "Makeup Brush Set",
   "price": 299,
   "description": "Premium quality makeup brushes for smooth application.",
@@ -303,12 +229,13 @@ const seedData = [
   "rating": 4.5,
   "category": "women",
   "__v": 0
-}]
+}
 ];
 
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
     console.log("MongoDB Connected ✅");
+    await Product.deleteMany({}); // Clear existing data
     await Product.insertMany(seedData);
     console.log("Data inserted 🚀");
     mongoose.disconnect();

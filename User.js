@@ -18,10 +18,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6
-    }
+    },
+    phone: String,
+    address1: String,
+    address2: String,
+    city: String,
+    state: String,
+    zip: String
   },
   {
-    timestamps: true // Adds createdAt and updatedAt automatically
+    timestamps: true
   }
 );
 

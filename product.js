@@ -1,10 +1,8 @@
-// 📄 server/product.js
 import express from 'express';
 import mongoose from 'mongoose';
 
 const router = express.Router();
 
-// 🧱 Define Mongoose Schema
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: Number,
@@ -14,17 +12,20 @@ const productSchema = new mongoose.Schema({
   category: String
 });
 
-// 🏷️ Model bound to 'ecommerce' collection
 const Product = mongoose.model('Product', productSchema, 'ecommerce');
 
-// ✅ GET /api/products - All or by ?category=...
 router.get('/', async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category, categories } = req.query;
+    if (categories === 'true') {
+      const uniqueCategories = await Product.distinct('category');
+      console.log('📋 Categories found:', uniqueCategories);
+      return res.json(uniqueCategories);
+    }
     const products = category
       ? await Product.find({ category })
       : await Product.find();
-    console.log('📦 Products found:', products); // Debug
+    console.log('📦 Products found:', products);
     res.json(products);
   } catch (err) {
     console.error('❌ Error fetching products:', err.message);
@@ -32,7 +33,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Optional: GET /api/products/category/:category
 router.get('/category/:category', async (req, res) => {
   try {
     const { category } = req.params;
