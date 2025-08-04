@@ -1,4 +1,3 @@
-// client/src/CategoryPage.js
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, NavLink, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,8 +15,7 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await 
-       fetch(`https://ecommerce-website-k6i5.onrender.com/api/products?category=${categoryName}`)
+        const res = await fetch(`https://ecommerce-website-k6i5.onrender.com/api/products?category=${categoryName.toLowerCase()}`);
         const data = await res.json();
 
         let sorted = [...data];
@@ -39,7 +37,6 @@ export default function CategoryPage() {
   const filteredProducts = products.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
-
   return (
     <div>
       {/* Navbar */}

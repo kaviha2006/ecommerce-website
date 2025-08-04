@@ -18,7 +18,7 @@ export default function ProfileInfoPage() {
       }
 
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/profile`, {
+        const res = await fetch('https://ecommerce-website-k6i5.onrender.com/api/auth/profile', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,7 +45,6 @@ export default function ProfileInfoPage() {
 
     fetchProfile();
   }, [navigate, location]);
-
   const handleSignOut = () => {
     localStorage.removeItem('token');
     navigate('/auth', { replace: true });
