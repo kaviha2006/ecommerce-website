@@ -1,69 +1,39 @@
-// Load .env variables
+// 📦 Imports
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Import dependencies
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-// Import routes
+// 🌐 Route files
 import authRoutes from './auth.js';
 import orderRoutes from './order.js';
+import productRoutes from './product.js';
+import profileRoutes from './routes/profile.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// 🔧 Middlewares
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://your-frontend.onrender.com'], // ✅ Replace with your actual Render frontend URL
+  credentials: true
+}));
 app.use(express.json());
 
-// Connect to MongoDB using .env variable
-mongoose.connect(process.env.MONGO_URL)
+// 🧠 MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.log("❌ MongoDB error:", err));
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/orders', orderRoutes);
+// 🔗 API Routes
+app.use('/api/auth', authRoutes);         // Auth (Register/Login)
+app.use('/api/orders', orderRoutes);      // Orders
+app.use('/api/products', productRoutes);  // Products
+app.use('/api/profile', profileRoutes);   // Profile Info
 
-// Product schema and model
-const productSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  description: String,
-  imageUrl: String,
-  rating: Number,
-  category: String
-});
-
-const Product = mongoose.model('ecommerce', productSchema);
-
-// Get all products or by category
-app.get('/products', async (req, res) => {
-  const { category } = req.query;
-  try {
-    const products = category
-      ? await Product.find({ category })
-      : await Product.find();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: 'Error fetching products' });
-  }
-});
-
-// Get products by category
-app.get('/products/category/:category', async (req, res) => {
-  const { category } = req.params;
-  try {
-    const products = await Product.find({ category });
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch category products' });
-  }
-});
-
-// Start server
+// 🚀 Start server
 app.listen(PORT, () => {
   console.log(`🚀 Backend running at http://localhost:${PORT}`);
 });

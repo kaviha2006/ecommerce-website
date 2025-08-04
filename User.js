@@ -1,15 +1,30 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  phone: String,
-  address1: String,
-  address2: String,
-  city: String,
-  state: String,
-  zip: String
-}, { timestamps: true }); // adds createdAt and updatedAt
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6
+    }
+  },
+  {
+    timestamps: true // Adds createdAt and updatedAt automatically
+  }
+);
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+export default User;

@@ -1,15 +1,21 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
-// ✅ Use the same secret key as in auth.js
-const JWT_SECRET = 'your_jwt_secret'; // Replace with your actual secret
-
-// 🧾 Order schema and model
+// 🧾 Order Schema
 const orderSchema = new mongoose.Schema({
   userId: String,
-  items: Array,
+  items: [
+    {
+      productId: String,
+      name: String,
+      quantity: Number,
+      price: Number
+    }
+  ],
   total: Number,
   date: {
     type: Date,
@@ -17,9 +23,10 @@ const orderSchema = new mongoose.Schema({
   }
 });
 
-const Order = mongoose.model('orders', orderSchema); // Collection name will be 'orders'
+// ⚙️ Model with explicit collection name
+const Order = mongoose.model('Order', orderSchema, 'orders');
 
-// 🔐 JWT Authentication Middleware
+// 🔐 JWT Middleware
 function authenticateToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.sendStatus(401);
@@ -31,9 +38,13 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// ✅ Save a new order → POST /api/orders/place
+// ✅ Place an order
 router.post('/place', authenticateToken, async (req, res) => {
   const { items, total } = req.body;
+
+  if (!items || !total || items.length === 0) {
+    return res.status(400).json({ success: false, message: 'Invalid order data' });
+  }
 
   try {
     const order = new Order({
@@ -43,34 +54,30 @@ router.post('/place', authenticateToken, async (req, res) => {
     });
 
     await order.save();
-    res.json({ success: true, message: 'Order saved successfully' }); // ✅ IMPORTANT
+    res.json({ success: true, message: 'Order placed successfully' });
   } catch (err) {
     console.error('❌ Error saving order:', err);
     res.status(500).json({ success: false, message: 'Failed to save order' });
   }
 });
 
-
-// ✅ Get user's orders → GET /api/orders/my
+// ✅ Get user's orders
 router.get('/my', authenticateToken, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user.id }).sort({ date: -1 });
-    res.json({ success: true, orders }); // ✅ Return with success flag and array
+    res.json({ success: true, orders });
   } catch (err) {
     console.error('❌ Error fetching orders:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch orders' });
   }
 });
 
-module.exports = router;
-// ✅ DELETE /api/orders/:id → Delete a specific order
+// ✅ Delete specific order
 router.delete('/:id', authenticateToken, async (req, res) => {
-  const orderId = req.params.id;
-
   try {
     const deleted = await Order.findOneAndDelete({
-      _id: orderId,
-      userId: req.user.id  // ✅ Security: only delete if it belongs to the user
+      _id: req.params.id,
+      userId: req.user.id
     });
 
     if (!deleted) {
@@ -84,3 +91,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+export default router;
