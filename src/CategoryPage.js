@@ -17,7 +17,7 @@ export default function CategoryPage() {
     const fetchProducts = async () => {
       try {
         const res = await 
-       fetch(`https://ecommerce-backend-6p3c.onrender.com/api/products?category=${categoryName}`)
+       fetch(`https://ecommerce-website-k6i5.onrender.com/api/products?category=${categoryName}`)
         const data = await res.json();
 
         let sorted = [...data];
