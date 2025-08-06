@@ -1,0 +1,46 @@
+.formStyle {
+  width: 350px;
+  padding: 2rem;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
+}
+.inputStyle {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #20D435;  
+  border-radius: 5px;
+  background-color: #fff;     
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.inputStyle:focus {
+  outline: none;
+  border-color: #00A9E0;        
+  box-shadow: 0 0 5px #00A9E0;  
+}
+.labelStyle {
+  font-weight: bold;
+  color: #800080;              
+  display: block;
+  margin-top: 10px;
+}
+
+.buttonStyle {
+  padding: 1rem;
+  background-color: #dd6216;  
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.product-img {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
